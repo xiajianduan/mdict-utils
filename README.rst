@@ -1,6 +1,16 @@
 ==========
 MDict Tool
 ==========
+依赖
+pip3 install setuptools wheel
+打包
+python3 setup.py sdist bdist_wheel
+安装
+pip3 install dist/mdict_utils-1.3.14-py3-none-any.whl --force-reinstall
+
+==========
+MDict Tool
+==========
 
 MDict pack/unpack tool
 
@@ -24,6 +34,10 @@ Usage
 Meta information::
 
     mdict -m dict.mdx
+
+All key list::
+
+    mdict -k dict.mdx
 
 All key list::
 

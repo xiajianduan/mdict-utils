@@ -145,7 +145,7 @@ class _OffsetTableEntry(object):
 
 class MDictWriter(object):
 	
-	def __init__(self, d, title, description, 
+	def __init__(self, d, title, description, stylesheet,
 	             block_size=65536, 
 	             encrypt_index=False,
 	             encoding="utf8",
@@ -218,6 +218,7 @@ class MDictWriter(object):
 		self._num_entries = len(d)
 		self._title=title
 		self._description=description
+		self._stylesheet=stylesheet
 		self._block_size = block_size
 		self._encrypt_index = encrypt_index
 		self._encrypt = (encrypt_key is not None)
@@ -482,7 +483,7 @@ class MDictWriter(object):
 			"""Description="{description}" """
 			"""Title="{title}" """
 			"""DataSourceFormat="106" """
-			"""StyleSheet="" """
+			"""StyleSheet="{stylesheet}" """
 			"""RegisterBy="{register_by_str}" """
 			"""RegCode="{regcode}"/>\r\n\x00""").format(
 			    version = self._version,
@@ -490,6 +491,7 @@ class MDictWriter(object):
 			    encoding = self._encoding, 
 			    date = datetime.date.today(), 
 			    description=escape(self._description, quote=True),
+				stylesheet=escape(self._stylesheet, quote=True),
 			    title=escape(self._title, quote=True),
 			    register_by_str=register_by_str,
 			    regcode=regcode
@@ -508,13 +510,14 @@ class MDictWriter(object):
 			"""Description="{description}" """
 			"""Title="{title}" """
 			"""DataSourceFormat="106" """
-			"""StyleSheet="" """
+			"""StyleSheet="{stylesheet}" """
 			"""RegisterBy="{register_by_str}" """
 			"""RegCode="{regcode}"/>\r\n\x00""").format(
 			    version = self._version,
 			    encrypted = encrypted, 
 			    date = datetime.date.today(), 
 			    description=escape(self._description, quote=True),
+				stylesheet=escape(self._stylesheet, quote=True),
 			    title=escape(self._title, quote=True),
 			    register_by_str=register_by_str,
 			    regcode=regcode

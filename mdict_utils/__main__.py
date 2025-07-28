@@ -46,6 +46,7 @@ def run():
     group.add_argument('-a', dest='add', metavar='<resource>', action='append', help='add resource file to mdx/mdd file')
     group.add_argument('--title', metavar='<title>', help='Dictionary title file')
     group.add_argument('--description', metavar='<description>', help='Dictionary descritpion file')
+    group.add_argument('--stylesheet', metavar='<stylesheet>', help='CSS stylesheet file for dictionary styling')
     group.add_argument('--encoding', metavar='<encoding>', default='utf-8', help='mdx txt file encoding')
     group.add_argument('--key-size', metavar='<size>', type=int, default=32, help='Key block size. unit: KB')
     group.add_argument('--record-size', metavar='<size>', type=int, default=64, help='Record block size. unit: KB')
@@ -128,12 +129,15 @@ def run():
             print()
             title = ''
             description = ''
+            stylesheet = ''
             if args.title:
                 title = open(args.title, 'rt', encoding='utf-8').read().strip()
             if args.description:
                 description = open(args.description, 'rt', encoding='utf-8').read().strip()
+            if args.stylesheet:
+                stylesheet = open(args.stylesheet, 'rt', encoding='utf-8').read()
             print('Pack to "%s"' % args.mdict)
-            pack(args.mdict, dictionary, title, description,
+            pack(args.mdict, dictionary, title, description, stylesheet,
                  key_size=args.key_size * 1024, record_size=args.record_size * 1024,
                  encoding=args.encoding, is_mdd=is_mdd)
     else:

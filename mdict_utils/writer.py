@@ -100,7 +100,7 @@ class _MdxRecordBlock(_MdxRecordBlockBase):
 
 
 class MDictWriter(MDictWriterBase):
-    def __init__(self, d, title, description,
+    def __init__(self, d, title, description, stylesheet,
                  key_size=32768, record_size=65536,
                  encrypt_index=False,
                  encoding="utf8",
@@ -115,7 +115,7 @@ class MDictWriter(MDictWriterBase):
         self._record_block_size = record_size
         # disable encrypt
         super(MDictWriter, self).__init__(
-            d, title, description,
+            d, title, description, stylesheet,
             block_size=record_size, encrypt_index=False,
             encoding=encoding, compression_type=compression_type, version=version,
             encrypt_key=None, register_by=None,
@@ -253,7 +253,7 @@ class MDictWriter(MDictWriterBase):
                 """Description="{description}" """
                 """Title="{title}" """
                 """DataSourceFormat="106" """
-                """StyleSheet="" """
+                """StyleSheet="{stylesheet}" """
                 """Left2Right="Yes" """
                 """RegisterBy="{register_by_str}" """
                 # """RegCode="{regcode}" """
@@ -264,6 +264,7 @@ class MDictWriter(MDictWriterBase):
                 encoding=self._encoding,
                 date=datetime.date.today(),
                 description=escape(self._description, quote=True),
+                stylesheet=escape(self._stylesheet, quote=True),
                 title=escape(self._title, quote=True),
                 register_by_str=register_by_str,
                 # regcode=regcode,
@@ -284,7 +285,7 @@ class MDictWriter(MDictWriterBase):
                 """Description="{description}" """
                 """Title="{title}" """
                 # """DataSourceFormat="106" """
-                # """StyleSheet="" """
+                """StyleSheet="{stylesheet}" """
                 """RegisterBy="{register_by_str}" """
                 # """RegCode="{regcode}" """
                 """/>\r\n\x00"""
@@ -293,6 +294,7 @@ class MDictWriter(MDictWriterBase):
                 encrypted=encrypted,
                 date=datetime.date.today(),
                 description=escape(self._description, quote=True),
+                stylesheet=escape(self._stylesheet, quote=True),
                 title=escape(self._title, quote=True),
                 register_by_str=register_by_str,
                 # regcode=regcode
@@ -302,13 +304,13 @@ class MDictWriter(MDictWriterBase):
         f.write(struct.pack(b"<L", zlib.adler32(header_string) & 0xffffffff))
 
 
-def pack(target, dictionary, title='', description='',
+def pack(target, dictionary, title='', description='', stylesheet='',
          key_size=32768, record_size=65536, encoding='UTF-8', is_mdd=False):
     def callback(value):
         bar.update(value)
 
     writer = MDictWriter(
-        dictionary, title=title, description=description,
+        dictionary, title=title, description=description, stylesheet=stylesheet,
         key_size=key_size, record_size=record_size,
         encoding=encoding, is_mdd=is_mdd,
     )
@@ -455,7 +457,7 @@ def pack_mdx_txt(source, encoding='UTF-8', callback=None, keys=None):
                     key = key.decode(encoding)
                     if not keys or key in keys:
                         dictionary.append({
-                            'key': key,
+                                'key': key,
                             'pos': pos,
                             'path': source,
                             'size': size,

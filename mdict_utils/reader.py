@@ -211,6 +211,11 @@ def unpack(target, source, split=None, convert_chtml=False, substyle=False, pass
             f = open(fname, 'wb')
             f.write(b'\r\n'.join(mdx.header[b'Description'].splitlines()))
             f.close()
+        if mdx.header.get(b'StyleSheet'):
+            fname = os.path.join(target, basename + '.stylesheet.txt')
+            f = open(fname, 'wb')
+            f.write(b'\r\n'.join(mdx.header[b'StyleSheet'].split(b'\n')))
+            f.close()
         if mdx.header.get(b'Title'):
             # MDX will be unpacked as TXT, rename to HTML
             fname = os.path.join(target, basename + '.title.html')
